@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>USLOG MAIN</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Noto Sans KR', sans-serif;
+    }
+
+    body {
+      font-size: 10px;
+      background-color: #fff;
+      color: #333;
+      padding: 2em;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 3em;
+    }
+
+    header h1 {
+      font-size: 2.5em;
+      color: #ff7a7a;
+    }
+
+    main {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .game-area {
+      position: relative;
+      width: 100%;
+      height: 79em;
+      background: #f0f0f0;
+      border: 2px solid #ccc;
+      margin: 2em auto;
+      overflow: hidden;
+    }
+
+    .character,
+    .dong-indicator {
+      position: absolute;
+      width: 15em;
+      height: 26em;
+      background-size: 56em 35em; /* 4 columns, 288x288 */
+      image-rendering: pixelated;
+      animation: walk 0.6s steps(4) infinite;
+      animation-play-state: paused;
+    }
+
+    .character {
+      background: url('walk.png') no-repeat;
+      z-index: 5;
+    }
+
+    .dong-indicator {
+      background: url('dong.png') no-repeat;
+      z-index: 4;
+      pointer-events: none;
+    }
+
+    @keyframes walk {
+      from { background-position: 0 0; }
+      to   { background-position: -54em 0; } /* 18em × (4 - 1) */
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🏡</h1>
+  </header>
+
+  <main>
+    <div class="game-area">
+      <div class="dong-indicator"></div>
+      <div class="character"></div>
+    </div>
+  </main>
+
+  <script>
+    const char = document.querySelector('.character');
+    const dong = document.querySelector('.dong-indicator');
+
+    let x = 10;
+    let y = 10;
+    const step = 0.625;
+
+    const directionY = {
+      ArrowDown: 0,
+      ArrowLeft: -26,
+      ArrowRight: -52,
+      ArrowUp: -78
+    };
+
+    let keysPressed = {};
+
+    document.addEventListener('keydown', (e) => {
+      const dir = e.key;
+
+      if (directionY[dir] !== undefined) {
+        keysPressed[dir] = true;
+
+        char.style.backgroundPositionY = directionY[dir] + 'em';
+        dong.style.backgroundPositionY = directionY[dir] + 'em';
+
+        char.style.animationPlayState = 'running';
+        dong.style.animationPlayState = 'running';
+
+        if (dir === 'ArrowLeft') x -= step;
+        if (dir === 'ArrowRight') x += step;
+        if (dir === 'ArrowUp') y -= step;
+        if (dir === 'ArrowDown') y += step;
+
+        char.style.left = x + 'em';
+        char.style.top = y + 'em';
+        dong.style.left = x + 'em';
+        dong.style.top = y + 'em';
+      }
+    });
+
+    document.addEventListener('keyup', (e) => {
+      keysPressed[e.key] = false;
+
+      if (!keysPressed['ArrowUp'] && !keysPressed['ArrowDown'] &&
+          !keysPressed['ArrowLeft'] && !keysPressed['ArrowRight']) {
+        char.style.animationPlayState = 'paused';
+        dong.style.animationPlayState = 'paused';
+      }
+    });
+  </script>
+</body>
+</html>
