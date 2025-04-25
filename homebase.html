@@ -44,32 +44,23 @@
       overflow: hidden;
     }
 
-    .character,
-    .dong-indicator {
-      position: absolute;
-      width: 15em;
-      height: 26em;
-      background-size: 56em 35em; /* 4 columns, 288x288 */
-      image-rendering: pixelated;
-      animation: walk 0.6s steps(4) infinite;
-      animation-play-state: paused;
-    }
-
     .character {
-      background: url('walk.png') no-repeat;
-      z-index: 5;
-    }
+  position: absolute;
+  width: 15em;           /* 288px */
+  height: 26em;          /* 288px */
+  background: url('walk.png') no-repeat;
+  background-size: 56em 35em;  /* 1152px x 288px */
+  image-rendering: pixelated;
+  animation: walk 0.6s steps(4) infinite;
+  animation-play-state: paused;
+}
 
-    .dong-indicator {
-      background: url('dong.png') no-repeat;
-      z-index: 4;
-      pointer-events: none;
-    }
 
-    @keyframes walk {
-      from { background-position: 0 0; }
-      to   { background-position: -54em 0; } /* 18em × (4 - 1) */
-    }
+@keyframes walk {
+  from { background-position: 0 0; }
+  to   { background-position: -54em 0; } /* (18em × (4 - 1)) */
+}
+
   </style>
 </head>
 <body>
@@ -78,62 +69,56 @@
   </header>
 
   <main>
+    <!-- <p>기록하는 공간입니다.</p> -->
+
     <div class="game-area">
-      <div class="dong-indicator"></div>
+        <div class="done-indicator"></div>
       <div class="character"></div>
     </div>
   </main>
 
   <script>
-    const char = document.querySelector('.character');
-    const dong = document.querySelector('.dong-indicator');
+const char = document.querySelector('.character');
+let x = 10;
+let y = 10;
+const step = 0.625;
+const directionY = {
+  ArrowDown: 0,       // 앞면
+  ArrowLeft: -26,     // 왼쪽
+  ArrowRight: -52,    // 오른쪽
+  ArrowUp: -78        // 뒷면
+};
 
-    let x = 10;
-    let y = 10;
-    const step = 0.625;
 
-    const directionY = {
-      ArrowDown: 0,
-      ArrowLeft: -26,
-      ArrowRight: -52,
-      ArrowUp: -78
-    };
 
-    let keysPressed = {};
+let keysPressed = {};
 
-    document.addEventListener('keydown', (e) => {
-      const dir = e.key;
+document.addEventListener('keydown', (e) => {
+  const dir = e.key;
 
-      if (directionY[dir] !== undefined) {
-        keysPressed[dir] = true;
+  if (directionY[dir] !== undefined) {
+    char.style.backgroundPositionY = directionY[dir] + 'em';
+    char.style.animationPlayState = 'running';
 
-        char.style.backgroundPositionY = directionY[dir] + 'em';
-        dong.style.backgroundPositionY = directionY[dir] + 'em';
+    if (dir === 'ArrowLeft') x -= step;
+    if (dir === 'ArrowRight') x += step;
+    if (dir === 'ArrowUp') y -= step;
+    if (dir === 'ArrowDown') y += step;
 
-        char.style.animationPlayState = 'running';
-        dong.style.animationPlayState = 'running';
+    char.style.left = x + 'em';
+    char.style.top = y + 'em';
+  }
+});
 
-        if (dir === 'ArrowLeft') x -= step;
-        if (dir === 'ArrowRight') x += step;
-        if (dir === 'ArrowUp') y -= step;
-        if (dir === 'ArrowDown') y += step;
+document.addEventListener('keyup', (e) => {
+  keysPressed[e.key] = false;
 
-        char.style.left = x + 'em';
-        char.style.top = y + 'em';
-        dong.style.left = x + 'em';
-        dong.style.top = y + 'em';
-      }
-    });
+  if (!keysPressed['ArrowUp'] && !keysPressed['ArrowDown'] &&
+      !keysPressed['ArrowLeft'] && !keysPressed['ArrowRight']) {
+    char.style.animationPlayState = 'paused';
+  }
+});
 
-    document.addEventListener('keyup', (e) => {
-      keysPressed[e.key] = false;
-
-      if (!keysPressed['ArrowUp'] && !keysPressed['ArrowDown'] &&
-          !keysPressed['ArrowLeft'] && !keysPressed['ArrowRight']) {
-        char.style.animationPlayState = 'paused';
-        dong.style.animationPlayState = 'paused';
-      }
-    });
   </script>
 </body>
 </html>
