@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>카카오 로그인 연동</title>
+  <script src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
+  <script>
+    Kakao.init('b148e33feea59cb3d33b379981763474'); // JavaScript 키
+
+    function kakaoLogin() {
+      const advCode = "A"; // 광고주 식별자 등
+      Kakao.Auth.authorize({
+        redirectUri: 'https://seojihee4016.github.io/UsLog/homebase.html',
+        scope: 'profile_nickname, name, phone_number, birthday'
+      });
+    }
+  </script>
+
+  <style>
+    body { font-family: 'Noto Sans KR', sans-serif; padding: 20px; }
+    .form-group { margin-bottom: 1em; }
+    .form-group label { display: block; font-weight: bold; margin-bottom: 0.4em; }
+    .form-group input { width: 100%; padding: 0.6em; font-size: 1em; }
+
+    .kakaoLoginBtnWrap {
+      text-align: center;
+      margin: 2em 0;
+    }
+
+    .submitBtn {
+      display: block;
+      width: 100%;
+      padding: 0.8em;
+      background-color: #FEE500;
+      color: #000;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+      font-size: 1.2em;
+    }
+
+    .checkbox-wrap {
+      margin: 1em 0;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>이벤트 참여 폼</h2>
+
+  <!-- 카카오 로그인 버튼 -->
+  <div class="kakaoLoginBtnWrap">
+    <button type="button" onclick="kakaoLogin()" style="border: none; background: none;">
+      <img src="https://developers.kakao.com/assets/img/about/logins/kakao_login_medium_narrow.png" alt="카카오 로그인">
+    </button>
+  </div>
+
+  <!-- 사용자 입력 폼 -->
+  <form id="userForm">
+    <div class="form-group">
+      <label for="name">이름</label>
+      <input type="text" id="name" name="name" placeholder="이름 입력">
+    </div>
+
+    <div class="form-group">
+      <label for="phone">전화번호</label>
+      <input type="tel" id="phone" name="phone" placeholder="숫자만 입력">
+    </div>
+
+    <div class="form-group">
+      <label for="age">나이</label>
+      <input type="number" id="age" name="age" placeholder="나이">
+    </div>
+
+    <div class="checkbox-wrap">
+      <label><input type="checkbox" name="agree" required> 개인정보 수집 및 이용에 동의합니다.</label>
+    </div>
+
+    <button type="submit" class="submitBtn">제출하기</button>
+  </form>
+
+</body>
+</html>
