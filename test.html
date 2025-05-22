@@ -84,29 +84,23 @@
 </html>
 
 <script>
-  Kakao.init('b148e33feea59cb3d33b379981763474'); // 다시 초기화
+  Kakao.init('b148e33feea59cb3d33b379981763474');
 
-  Kakao.Auth.getStatusInfo(({ status }) => {
-    if (status === 'connected') {
-      Kakao.API.request({
-        url: '/v2/user/me',
-        success: function(res) {
-          // 콘솔 확인
-          console.log('카카오 유저 정보:', res);
+  const token = Kakao.Auth.getAccessToken();
+  if (token) {
+    Kakao.API.request({
+      url: '/v2/user/me',
+      success: function(res) {
+        console.log('카카오 유저 정보:', res);
 
-          const kakaoName = res.kakao_account?.name || '';
-          const kakaoPhone = res.kakao_account?.phone_number || '';
-
-          document.getElementById('name').value = kakaoName;
-          document.getElementById('phone').value = kakaoPhone;
-        },
-        fail: function(err) {
-          console.error('사용자 정보 요청 실패', err);
-        }
-      });
-    } else {
-      console.warn('카카오 로그인 안 됨');
-    }
-  });
+        const nickname = res.kakao_account?.profile?.nickname || '';
+        document.getElementById('name').value = nickname;
+      },
+      fail: function(err) {
+        console.error('사용자 정보 요청 실패', err);
+      }
+    });
+  }
 </script>
+
 
