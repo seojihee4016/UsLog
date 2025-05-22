@@ -5,18 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>카카오 로그인 연동</title>
   <script src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
-  <script>
-    Kakao.init('b148e33feea59cb3d33b379981763474'); // JavaScript 키
-
-    function kakaoLogin() {
-      const advCode = "A"; // 광고주 식별자 등
-      Kakao.Auth.authorize({
-        redirectUri: 'https://seojihee4016.github.io/UsLog/test.html',
-        scope: 'profile_nickname'
-      });
-    }
-  </script>
-
   <style>
     body { font-family: 'Noto Sans KR', sans-serif; padding: 20px; }
     .form-group { margin-bottom: 1em; }
