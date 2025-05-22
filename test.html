@@ -72,29 +72,75 @@
 </html>
 
 <script>
+  // Kakao.init('b148e33feea59cb3d33b379981763474');
+
+  // function kakaoLogin() {
+  //   Kakao.Auth.login({
+  //     scope: 'profile_nickname',
+  //     success: function(authObj) {
+  //       console.log('로그인 성공:', authObj);
+  //       Kakao.API.request({
+  //         url: '/v2/user/me',
+  //         success: function(res) {
+  //           const nickname = res.kakao_account?.profile?.nickname || '';
+  //           document.getElementById('name').value = nickname;
+  //         },
+  //         fail: function(err) {
+  //           console.error('유저 정보 요청 실패:', err);
+  //         }
+  //       });
+  //     },
+  //     fail: function(err) {
+  //       console.error('로그인 실패:', err);
+  //     }
+  //   });
+  // }
+
   Kakao.init('b148e33feea59cb3d33b379981763474');
 
-  function kakaoLogin() {
-    Kakao.Auth.login({
-      scope: 'profile_nickname',
-      success: function(authObj) {
-        console.log('로그인 성공:', authObj);
-        Kakao.API.request({
-          url: '/v2/user/me',
-          success: function(res) {
-            const nickname = res.kakao_account?.profile?.nickname || '';
-            document.getElementById('name').value = nickname;
-          },
-          fail: function(err) {
-            console.error('유저 정보 요청 실패:', err);
-          }
-        });
-      },
-      fail: function(err) {
-        console.error('로그인 실패:', err);
-      }
-    });
-  }
+function kakaoLogin() {
+  Kakao.Auth.login({
+    scope: 'profile_nickname, name, phone_number, email',
+    success: function(authObj) {
+      console.log('로그인 성공:', authObj);
+
+      Kakao.API.request({
+        url: '/v2/user/me',
+        success: function(res) {
+          console.log('카카오 유저 전체 정보:', res); // 전체 응답 구조 확인용
+
+          const kakaoId = res.id;
+          const nickname = res.kakao_account?.profile?.nickname || '';
+          const name = res.kakao_account?.name || '';
+          const email = res.kakao_account?.email || '';
+          const phone = res.kakao_account?.phone_number?.replace('+82 ', '0') || '';
+
+          console.log('ID:', kakaoId);
+          console.log('닉네임:', nickname);
+          console.log('이름:', name);
+          console.log('이메일:', email);
+          console.log('전화번호:', phone);
+
+          // 예: form 자동 채우기 (입력칸이 존재할 경우)
+          const nameInput = document.getElementById('name');
+          const phoneInput = document.getElementById('phone');
+          const emailInput = document.getElementById('email');
+
+          if (nameInput) nameInput.value = name || nickname;
+          if (phoneInput) phoneInput.value = phone;
+          if (emailInput) emailInput.value = email;
+        },
+        fail: function(err) {
+          console.error('유저 정보 요청 실패:', err);
+        }
+      });
+    },
+    fail: function(err) {
+      console.error('로그인 실패:', err);
+    }
+  });
+}
+
 </script>
 
 
