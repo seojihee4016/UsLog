@@ -125,6 +125,15 @@ function kakaoLogin() {
 }
 
 
+
+  const data = {
+  name: document.getElementById('name').value,
+  agree: document.querySelector('input[name="agree"]').checked
+};
+
+console.log('저장할 데이터:', JSON.stringify(data, null, 2));
+
+
 </script>
 
 
